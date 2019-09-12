@@ -102,11 +102,27 @@ class Board(val width: Int, val height: Int) {
 		} else {
 			block.isVisible = true
 			for (neighbor in findNeighboringBlocks(block.x, block.y)) {
-				if (!neighbor.isMine) {
+				if (!neighbor.isMine && !neighbor.isVisible) {
 					mineBlock(neighbor.x, neighbor.y)
 				}
 			}
 		}
 		return isPlaying
+	}
+
+	override fun toString(): String {
+		var str = ""
+		for (layer in map) {
+			for (block in layer) {
+				str = when {
+					block.isVisible -> str.plus("_")
+					block.isMine -> str.plus("X")
+					else -> str.plus("|")
+				}
+				str = str.plus(" ")
+			}
+			str = str.plus("\n")
+		}
+		return str
 	}
 }

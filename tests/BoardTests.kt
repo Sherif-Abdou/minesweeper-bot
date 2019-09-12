@@ -18,8 +18,24 @@ fun testNeighbor() {
 	}
 }
 
+fun testBorder() {
+	val board = Board(8, 8)
+	board.mineBlock(0, 0)
+	val blocks = board.findBorderBlocks()
+	for (block in blocks) {
+		println("X: ${block.x} Y: ${block.y} Mine: ${block.isMine}")
+	}
+}
+
+fun testPrint() {
+	val board = Board(8, 8)
+	board.mineBlock(0, 0)
+	print(board.toString())
+}
 
 fun main() {
 //	testBoard()
-	testNeighbor()
+//	testNeighbor()
+//	testBorder()
+	testPrint()
 }
