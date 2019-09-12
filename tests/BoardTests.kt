@@ -10,6 +10,15 @@ fun testBoard() {
 	}
 }
 
+fun testNeighbor() {
+	val board = Board(8, 8)
+	val blocks = board.findNeighboringBlocks(7, 7)
+	for (block in blocks) {
+		println("X: ${block.x} Y: ${block.y} Mine: ${block.isMine}")
+	}
+}
+
 fun main() {
-	testBoard()
+//	testBoard()
+	testNeighbor()
 }
