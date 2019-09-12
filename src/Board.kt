@@ -103,7 +103,8 @@ class Board(val width: Int, val height: Int) {
 			block.isVisible = true
 			for (neighbor in findNeighboringBlocks(block.x, block.y)) {
 				if (!neighbor.isMine && !neighbor.isVisible) {
-					mineBlock(neighbor.x, neighbor.y)
+					val nmines = findNeighboringBlocks(neighbor.x, neighbor.y).filter { b -> b.isMine }
+					if (nmines.isEmpty()) mineBlock(neighbor.x, neighbor.y)
 				}
 			}
 		}
