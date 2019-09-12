@@ -9,7 +9,7 @@ class Board(val width: Int, val height: Int) {
 	var map = Array<Array<Block>>(width) { x -> Array<Block>(height) { y -> Block(x, y, false) } }
 	var isPlaying = true
 
-	private val random = Random(1)
+	private val random = Random(69)
 
 	private var directions = mutableListOf<Vector>()
 
@@ -94,17 +94,26 @@ class Board(val width: Int, val height: Int) {
 		return blocks
 	}
 
-	fun mineBlock(x: Int, y: Int): Boolean {
+	fun borderNumber(x: Int, y: Int): Int {
+		val neighbors = findNeighboringBlocks(x, y)
+		val mines = neighbors.filter { block -> block.isMine }
+		return mines.size
+	}
+
+	fun mineBlock(x: Int, y: Int, noRecursion: Boolean = false): Boolean {
 		val block = map[x][y]
-		if (block.isMine) {
+		if (block.isMine && !block.isFlagged) {
 			isPlaying = false
 			return isPlaying
 		} else {
 			block.isVisible = true
-			for (neighbor in findNeighboringBlocks(block.x, block.y)) {
-				if (!neighbor.isMine && !neighbor.isVisible) {
-					val nmines = findNeighboringBlocks(neighbor.x, neighbor.y).filter { b -> b.isMine }
-					if (nmines.isEmpty()) mineBlock(neighbor.x, neighbor.y)
+			if (!noRecursion) {
+				for (neighbor in findNeighboringBlocks(block.x, block.y)) {
+					if (!neighbor.isMine && !neighbor.isVisible) {
+						val nmines = findNeighboringBlocks(neighbor.x, neighbor.y).filter { b -> b.isMine && !b.isFlagged }
+						if (nmines.isEmpty()) mineBlock(neighbor.x, neighbor.y)
+						else mineBlock(neighbor.x, neighbor.y, noRecursion = true)
+					}
 				}
 			}
 		}
@@ -113,8 +122,8 @@ class Board(val width: Int, val height: Int) {
 
 	override fun toString(): String {
 		var str = ""
-		for (layer in map) {
-			for (block in layer) {
+		for (layer in map.reversedArray()) {
+			for (block in layer.reversedArray()) {
 				str = when {
 					block.isVisible -> str.plus("_")
 					block.isMine -> str.plus("X")
