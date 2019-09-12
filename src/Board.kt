@@ -1,3 +1,4 @@
+import com.sun.org.apache.xpath.internal.operations.Bool
 import kotlin.math.ceil
 import kotlin.random.Random
 
@@ -6,6 +7,8 @@ data class Vector(val x: Int, val y: Int)
 class Board(val width: Int, val height: Int) {
 
 	var map = Array<Array<Block>>(width) { x -> Array<Block>(height) { y -> Block(x, y, false) } }
+	var isPlaying = true
+
 	private val random = Random(1)
 
 	private var directions = mutableListOf<Vector>()
@@ -89,5 +92,21 @@ class Board(val width: Int, val height: Int) {
 		}
 
 		return blocks
+	}
+
+	fun mineBlock(x: Int, y: Int): Boolean {
+		val block = map[x][y]
+		if (block.isMine) {
+			isPlaying = false
+			return isPlaying
+		} else {
+			block.isVisible = true
+			for (neighbor in findNeighboringBlocks(block.x, block.y)) {
+				if (!neighbor.isMine) {
+					mineBlock(neighbor.x, neighbor.y)
+				}
+			}
+		}
+		return isPlaying
 	}
 }
