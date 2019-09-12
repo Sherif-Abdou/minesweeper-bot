@@ -125,6 +125,7 @@ class Board(val width: Int, val height: Int) {
 		for (layer in map) {
 			for (block in layer) {
 				str = when {
+					block.isFlagged -> str.plus("F")
 					block.isVisible -> str.plus("_")
 					block.isMine -> str.plus("X")
 					else -> str.plus("|")
