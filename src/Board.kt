@@ -122,8 +122,8 @@ class Board(val width: Int, val height: Int) {
 
 	override fun toString(): String {
 		var str = ""
-		for (layer in map.reversedArray()) {
-			for (block in layer.reversedArray()) {
+		for (layer in map) {
+			for (block in layer) {
 				str = when {
 					block.isVisible -> str.plus("_")
 					block.isMine -> str.plus("X")

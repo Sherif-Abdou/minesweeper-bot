@@ -37,12 +37,12 @@ fun testPrint() {
 fun main() {
 //	testBoard()
 //	testNeighbor()
-//	testBorder()
+	testBorder()
 	testPrint()
 
-	val board = Board(8, 8)
-	board.mineBlock(0, 0)
-	for (block in board.flat().filter { f -> f.isMine }) {
-		println("X: ${block.x} Y: ${block.y} Mine: ${block.isMine}")
-	}
+//	val board = Board(8, 8)
+//	board.mineBlock(0, 0)
+//	for (block in board.flat().filter { f -> f.isMine }) {
+//		println("X: ${block.x} Y: ${block.y} Mine: ${block.isMine}")
+//	}
 }
