@@ -18,6 +18,7 @@ fun testNeighbor() {
 	}
 }
 
+
 fun main() {
 //	testBoard()
 	testNeighbor()
