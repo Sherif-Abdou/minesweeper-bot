@@ -9,12 +9,12 @@ class Board(val width: Int, val height: Int) {
 	var map = Array<Array<Block>>(width) { x -> Array<Block>(height) { y -> Block(x, y, false) } }
 	var isPlaying = true
 
-	private val random = Random(69)
+	private val random = Random(70)
 
 	private var directions = mutableListOf<Vector>()
 
 	init {
-		val amountOfMines = ceil((((width + height) / 2.0) * ((width + height) / 2.0)) / 10.0).toInt()
+		val amountOfMines = ceil((((width + height) / 2.0) * ((width + height) / 2.0)) / 5.0).toInt()
 		for (i in 0..amountOfMines) {
 			generateMine()
 		}
@@ -125,6 +125,7 @@ class Board(val width: Int, val height: Int) {
 		for (layer in map) {
 			for (block in layer) {
 				str = when {
+					block.isFlagged -> str.plus("F")
 					block.isVisible -> str.plus("_")
 					block.isMine -> str.plus("X")
 					else -> str.plus("|")
@@ -134,5 +135,17 @@ class Board(val width: Int, val height: Int) {
 			str = str.plus("\n")
 		}
 		return str
+	}
+
+	fun hasWon(): Boolean {
+		if (!isPlaying) {
+			return false
+		}
+		for (block in flat()) {
+			if (!block.isVisible && !block.isFlagged) {
+				return false
+			}
+		}
+		return true
 	}
 }
