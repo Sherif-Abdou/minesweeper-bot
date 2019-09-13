@@ -1,9 +1,12 @@
 class Bot(var board: Board) {
 	fun run() {
-		for (i in 0..2) {
+		while (!board.hasWon()) {
+			println(board)
 			val mined = mineGiven()
 			mined.forEach { block: Block -> lookForMarked(block) }
+			if (!board.isPlaying) return
 		}
+		println("Done")
 	}
 
 	fun mineGiven(): MutableList<Block> {

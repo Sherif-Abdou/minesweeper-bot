@@ -26,10 +26,10 @@ fun testMineAround() {
 
 fun testRun() {
 	val board = Board(8, 8)
+	println(board)
 	board.mineBlock(0, 0)
 	val bot = Bot(board)
 	bot.run()
-	println(board)
 }
 
 fun main() {
