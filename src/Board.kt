@@ -1,16 +1,16 @@
-import com.sun.org.apache.xpath.internal.operations.Bool
 import kotlin.math.ceil
 import kotlin.random.Random
+import kotlin.random.Random.Default.nextInt
 
 data class Vector(val x: Int, val y: Int)
 
 class Board(val width: Int, val height: Int) {
 
+	// A 2D array to represent the mine feild
 	var map = Array<Array<Block>>(width) { x -> Array<Block>(height) { y -> Block(x, y, false) } }
 	var isPlaying = true
 
-	private val random = Random(70)
-
+	// A list of directions used to find neighboring blocks
 	private var directions = mutableListOf<Vector>()
 
 	init {
@@ -20,10 +20,11 @@ class Board(val width: Int, val height: Int) {
 		}
 	}
 
+	// Generates a single mine at a random X and Y
 	private fun generateMine() {
 
-		val randomX = random.nextInt(0, width)
-		val randomY = random.nextInt(0, height)
+		val randomX = nextInt(0, width)
+		val randomY = nextInt(0, height)
 		if (!map[randomX][randomY].isMine) {
 			map[randomX][randomY].isMine = true
 		} else generateMine()
@@ -40,6 +41,7 @@ class Board(val width: Int, val height: Int) {
 		directions.add(Vector(0, -1))
 	}
 
+	// Returns a list of all the neighboring pieces that exist, including diagonal pieces
 	fun findNeighboringBlocks(x: Int, y: Int): MutableList<Block> {
 		val blocks = mutableListOf<Block>()
 		for (direction in this.directions) {
@@ -51,6 +53,7 @@ class Board(val width: Int, val height: Int) {
 		return blocks
 	}
 
+	// Bounds a value between 0 and the board width
 	private fun boundWidth(value: Int): Boolean {
 		return when {
 			value < 0 -> false
@@ -59,6 +62,7 @@ class Board(val width: Int, val height: Int) {
 		}
 	}
 
+	// Bounds a value between 0 and the board height
 	private fun boundHeight(value: Int): Boolean {
 		return when {
 			value < 0 -> false
@@ -67,6 +71,7 @@ class Board(val width: Int, val height: Int) {
 		}
 	}
 
+	// Returns a 1D array
 	fun flat(): MutableList<Block> {
 		val blocks = mutableListOf<Block>()
 
@@ -79,6 +84,7 @@ class Board(val width: Int, val height: Int) {
 		return blocks
 	}
 
+	// Finds all the visible blocks that border a non-visible block and returns them in an array
 	fun findBorderBlocks(): MutableList<Block> {
 		val blocks = mutableListOf<Block>()
 
@@ -94,12 +100,14 @@ class Board(val width: Int, val height: Int) {
 		return blocks
 	}
 
+	// Returns the number of adjacent mines to the block
 	fun borderNumber(x: Int, y: Int): Int {
 		val neighbors = findNeighboringBlocks(x, y)
 		val mines = neighbors.filter { block -> block.isMine }
 		return mines.size
 	}
 
+	// Mines out the block and neighboring blocks if possible
 	fun mineBlock(x: Int, y: Int, noRecursion: Boolean = false): Boolean {
 		val block = map[x][y]
 		if (block.isMine && !block.isFlagged) {
@@ -110,7 +118,8 @@ class Board(val width: Int, val height: Int) {
 			if (!noRecursion) {
 				for (neighbor in findNeighboringBlocks(block.x, block.y)) {
 					if (!neighbor.isMine && !neighbor.isVisible) {
-						val nmines = findNeighboringBlocks(neighbor.x, neighbor.y).filter { b -> b.isMine && !b.isFlagged }
+						val nmines =
+							findNeighboringBlocks(neighbor.x, neighbor.y).filter { b -> b.isMine && !b.isFlagged }
 						if (nmines.isEmpty()) mineBlock(neighbor.x, neighbor.y)
 						else mineBlock(neighbor.x, neighbor.y, noRecursion = true)
 					}
@@ -120,6 +129,7 @@ class Board(val width: Int, val height: Int) {
 		return isPlaying
 	}
 
+	// Prints out the game
 	override fun toString(): String {
 		var str = ""
 		for (layer in map) {
@@ -137,6 +147,7 @@ class Board(val width: Int, val height: Int) {
 		return str
 	}
 
+	// Checks if there are any unopened and unflagged blocks left
 	fun hasWon(): Boolean {
 		if (!isPlaying) {
 			return false

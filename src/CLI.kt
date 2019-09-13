@@ -1,8 +1,5 @@
-import java.lang.NumberFormatException
-import kotlin.io.readLine
-
 fun main() {
-	val board = Board(8,8)
+	val board = Board(8, 8)
 	val bot = Bot(board)
 	val (row, column) = getLocation()
 	board.mineBlock(row, column)
