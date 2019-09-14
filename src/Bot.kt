@@ -32,8 +32,8 @@ class Bot(var board: Board) {
 	// Checks around every visible block of a flagged mine
 	fun lookForMarked(block: Block) {
 		val visibleNeighbors = board.findNeighboringBlocks(block.x, block.y).filter { neighbor -> neighbor.isVisible }
-		for (neigbhor in visibleNeighbors) {
-			checkAround(neigbhor)
+		for (neighbor in visibleNeighbors) {
+			checkAround(neighbor)
 		}
 	}
 
@@ -44,8 +44,8 @@ class Bot(var board: Board) {
 		if (mineNumbers == flagged.size) {
 			val unmined = board.findNeighboringBlocks(block.x, block.y)
 				.filter { neighbor -> !neighbor.isFlagged && !neighbor.isVisible }
-			for (umine in unmined) {
-				board.mineBlock(umine.x, umine.y)
+			for (mine in unmined) {
+				board.mineBlock(mine.x, mine.y)
 			}
 		}
 	}
@@ -53,9 +53,9 @@ class Bot(var board: Board) {
 	fun mineSurrounding(block: Block) {
 		val invisibleNeighbors =
 			board.findNeighboringBlocks(block.x, block.y).filter { neighbor -> !neighbor.isVisible }
-		for (neigbhor in invisibleNeighbors) {
-			if (!neigbhor.isFlagged) {
-				neigbhor.isVisible = true
+		for (neighbor in invisibleNeighbors) {
+			if (!neighbor.isFlagged) {
+				neighbor.isVisible = true
 			}
 		}
 	}
